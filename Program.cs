@@ -17,11 +17,19 @@ namespace ThreadedLogging
 
             Logger.Log("Starting threads", TraceLevel.Info);
 
-            new Thread(new ThreadStart(WriteToLog)) { Name = "Logging thread one" }.Start();
-            new Thread(new ThreadStart(WriteToLog)) { Name = "Logging thread two" }.Start();
-            new Thread(new ThreadStart(WriteToLog)) { Name = "Logging thread three" }.Start();
+            new Thread(new ThreadStart(WriteToLog)) { Name = "Logging thread one", IsBackground = true }.Start();
+            new Thread(new ThreadStart(WriteToLog)) { Name = "Logging thread two", IsBackground = true }.Start();
+            new Thread(new ThreadStart(WriteToLog)) { Name = "Logging thread three", IsBackground = true }.Start();
             
             Logger.Log("Finished starting threads", TraceLevel.Info);
+
+            Thread.Sleep(5000);
+
+            Logger.Log("Terminating the logger", TraceLevel.Info);
+
+            Logger.Terminate();
+
+            Console.WriteLine("Press any key to continue..");
 
             Console.ReadKey();
         }
@@ -32,7 +40,7 @@ namespace ThreadedLogging
             {
                 Logger.Log($"This is a log message from {Thread.CurrentThread.Name} at {DateTime.Now:HH:mm:ss}", TraceLevel.Info);
 
-                Thread.Sleep(_RNG.Next(2000));
+                Thread.Sleep(_RNG.Next(1000));
             }
         }
     }
